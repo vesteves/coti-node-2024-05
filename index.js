@@ -1,5 +1,5 @@
-function somar(a, b) {
-	return a + b;
-}
+const express = require("express")
 
-module.exports = somar
+const app = express()
+
+app.listen(1234)

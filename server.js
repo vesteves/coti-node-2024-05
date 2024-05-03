@@ -1,5 +1,5 @@
 const express = require("express");
-const somar = require("./index.js");
+const somar = require("./somar.js");
 const app = express();
 
 function subtrair(x, y) {
