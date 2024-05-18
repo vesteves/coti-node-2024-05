@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <ul id="resultado"></div>
+    <button onclick="salvarDado()">Salvar</button>
+    <button onclick="atualizarLista()">Atualizar lista</button>
+    <script>
+        const resultado = document.getElementById('resultado')
+
+        const atualizarLista = () => {
+            fetch('http://localhost:8000/',
+                {
+                    method: 'GET',
+                })
+                .then(result => result.json())
+                .then(result => {
+                    result.map(item => {
+                        if (item.nome) {
+                            return resultado.innerHTML += `<li>${item.nome}</ul>`
+                        }
+                    })
+                })
+        }
+
+        const salvarDado = () => {
+            fetch('http://localhost:8000/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                },
+                body: JSON.stringify({
+                    nome: "Fernanda"
+                })
+            })
+        }
+    </script>
+</body>
+</html>
