@@ -1,22 +1,17 @@
 import { Router } from 'express'
-
-// importação do modelo de usuário
-import { userModel } from './user.model'
-
-// a linha abaixo traz apenas Types de mongoose para este arquivo pois precisamos
-// apenas do Types.ObjectId
-import { Types } from 'mongoose'
+import userController, { store, remove, update } from './user.controller'
 
 const router = Router()
 
 router.get('/', async (req, res) => {
-    const result = await userModel.find()
-    return res.status(200).json(result)
+    const result = await userController.getAll()
+    return res.status(200).json([
+        ...result
+    ])
 })
 
 router.post('/', async (req, res) => {
-    const result = await userModel.create({
-        _id: new Types.ObjectId,
+    const result = await store({
         name: req.body.name,
         email: req.body.email,
         password: req.body.password
@@ -26,7 +21,7 @@ router.post('/', async (req, res) => {
 })
 
 router.delete('/:_id', async (req, res) => {
-    const result = await userModel.deleteOne({
+    const result = await remove({
         _id: req.params._id,
     })
 
@@ -34,9 +29,8 @@ router.delete('/:_id', async (req, res) => {
 })
 
 router.put('/:_id', async (req, res) => {
-    const result = await userModel.updateOne({
-        _id: req.params._id
-    }, {
+    const result = await update({
+        _id: req.params._id,
         name: req.body.name,
         email: req.body.email,
         password: req.body.password
