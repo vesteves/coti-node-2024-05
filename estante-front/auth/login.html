@@ -21,6 +21,7 @@
       crossorigin="anonymous"
     ></script>
     <script src="../js/custom.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   </head>
   <body>
     <!-- Navbar -->
@@ -103,14 +104,24 @@
           }),
         });
 
-        const auth = await result.json();
-        localStorage.setItem('auth', JSON.stringify(auth));
+        if (!result.ok) {
+          const data = await result.json();
+          Swal.fire({
+            title: 'Erro!',
+            text: data.error,
+            icon: 'error',
+          });
+          return;
+        }
+        const data = await result.json();
+        localStorage.setItem('auth', JSON.stringify(data));
 
         $('#login').html(
-          `<button class="nav-link" id="goToDados">${auth.user.name}</button>`
+          `<button class="nav-link" id="goToDados">${data.user.name}</button>`
         );
 
         window.open('/dados.html', '_self');
+        return;
       }
 
       $(document).ready(function () {
