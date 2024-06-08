@@ -1,20 +1,29 @@
 import jwt from 'jsonwebtoken'
 import { getOne, getOneById } from '../user/user.controller'
 
-// cassio 08iokyuclaro VALIDADE
-// rafaela op1207 VALIDADE
-
 interface LoginParams {
   email: string
   password: string
 }
 
+interface User {
+  _id: string;
+  name?: string;
+  email?: string;
+  password?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface UserResult {
+  error?: string;
+  _id?: string;
+}
+
 export const login = async ({ email, password }: LoginParams) => {
   const userRaw = await getOne({ email })
   if (!userRaw) {
-    return {
-      error: 'Usuário não encontrado'
-    }
+    throw new Error('Usuário não encontrado')
   }
 
   const user = userRaw.toObject()
@@ -32,18 +41,16 @@ export const login = async ({ email, password }: LoginParams) => {
     }
   }
 
-  return {
-    error: 'Não autenticado'
-  }
+  throw new Error('Não autenticado')
 }
 
-export const me = async (token: string) => {
+export const me = async (token: string): Promise<UserResult | undefined> => {
   try {
     const isAuth = jwt.verify(token, 'secret')
     const userRaw = await getOneById({ _id: isAuth as string })
 
     if (userRaw) {
-      const user = userRaw.toObject();
+      const user = userRaw.toObject() as User;
       delete user.password
 
       return user
